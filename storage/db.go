@@ -1,0 +1,65 @@
+package storage
+
+import (
+	"database/sql"
+	"log"
+)
+
+type DBStorage struct {
+	db *sql.DB
+}
+
+func NewDBStorage(connection string) *DBStorage {
+	db, err := sql.Open("postgres", connection)
+	if err != nil {
+		log.Fatal("Ошибка при открытии базы данных:", err)
+	}
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatal("Ошибка при подключении к базе данных:", err)
+	}
+
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS urls (
+			id INTEGER PRIMARY KEY,
+			short_url VARCHAR(10) UNIQUE NOT NULL,
+			original_url TEXT UNIQUE NOT NULL
+		);
+		`)
+	if err != nil {
+		log.Fatal("Ошибка при создании таблицы:", err)
+	}
+	return &DBStorage{db: db}
+}
+
+func (db *DBStorage) Post(originalURL, shortURL string) {
+	if db.checkExists(shortURL) {
+		_, err := db.db.Exec("INSERT INTO urls (short_url, original_url) VALUES ($s, $s)", shortURL, originalURL)
+		if err != nil {
+			log.Fatal("Ошибка метода Post:", err)
+		}
+	}
+
+}
+
+func (db *DBStorage) Get(shortURL string) string {
+	if db.checkExists(shortURL) {
+		return ""
+	}
+	var originalURL string
+	err := db.db.QueryRow("SELECT original_url FROM urls WHERE short_url = $s", shortURL).Scan(&originalURL)
+	if err != nil {
+		log.Fatal("Ошибка метода Get:", err)
+	}
+	return originalURL
+}
+
+func (db *DBStorage) checkExists(shortURL string) bool {
+	var originalURL string
+	err := db.db.QueryRow("SELECT original_url FROM links WHERE short_url = $s", shortURL).Scan(&originalURL)
+	if err != nil {
+		log.Fatal("Ошибка метода CheckExists:", err)
+	}
+	return err == sql.ErrNoRows
+}
