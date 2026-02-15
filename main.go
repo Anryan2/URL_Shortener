@@ -1,42 +1,43 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/Anryan2/URL_Shortener/service"
+	"github.com/Anryan2/URL_Shortener/storage"
 
 	_ "github.com/lib/pq"
 )
 
-var storage storage.Storage
+var store storage.Storage
 
 func main() {
-	defaultStorage = os.Getenv("STORAGE_TYPE")
+	defaultStorage := os.Getenv("STORAGE_TYPE")
+	defaultDbConn := os.Getenv("DB_CONN_STR")
 
-	var fullURL string
-	fmt.Scanln(&fullURL)
-	fmt.Println(fullURL)
-	smallURL := service.GenerateHash(fullURL)
-	fmt.Println(smallURL)
+	storageType := flag.String("storage", defaultStorage, "Тип хранилища: memory или postgres")
+	dbConnStr := flag.String("db", defaultDbConn, "Строка подключения к PostgreSQL")
+	flag.Parse()
 
 	switch *storageType {
 	case "postgres":
 		fmt.Println("Используем хранилище:", *storageType)
-		storage = storage.NewPostgresStorage(*dbConnStr)
+		store = storage.NewDBStorage(*dbConnStr)
 	case "memory":
 		fmt.Println("Используем хранилище:", *storageType)
-		storage = storage.NewMemoryStorage()
+		store = storage.NewMemoryStorage()
 	default:
 		log.Fatal("Неизвестный тип хранилища")
 	}
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/shorten", service.ShortenHandler(storage))
-	mux.HandleFunc("/", service.OriginalHandler(storage))
+	mux.HandleFunc("/shorten", service.ShortenHandler(store))
+	mux.HandleFunc("/", service.OriginalHandler(store))
 
 	fmt.Println("Сервер запущен на порту 8080")
 	log.Fatal(http.ListenAndServe(":8080", mux))
