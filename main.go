@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"shortener/service"
+	"github.com/Anryan2/URL_Shortener/service"
 
 	_ "github.com/lib/pq"
 )
