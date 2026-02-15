@@ -18,7 +18,7 @@ type shortenResponse struct {
 	ShortURL string `json:"short_url"`
 }
 
-func ShorternHandler(storage storage.Storage) http.HandlerFunc {
+func ShortenHandler(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
@@ -58,6 +58,18 @@ func ShorternHandler(storage storage.Storage) http.HandlerFunc {
 func OriginalHandler(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
+		shortURL := strings.TrimPrefix(r.URL.Path, "/")
+		if shortURL == "" {
+			http.Error(w, "Короткая ссылка не найдена", http.StatusBadRequest)
+			return
+		}
+		originalURL := storage.Get(shortURL)
+		if originalURL == "" {
+			http.Error(w, "Оригинальная ссылка не найдена", http.StatusNotFound)
+			return
+		}
+
+		http.Redirect(w, r, originalURL, http.StatusFound)
 	}
 }
 func GenerateHash(full string) string {
