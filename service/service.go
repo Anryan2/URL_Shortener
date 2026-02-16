@@ -47,7 +47,7 @@ func ShortenHandler(storage storage.Storage) http.HandlerFunc {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		if _, err = w.Write(responseData); err != nil {
+		if _, err := w.Write(responseData); err != nil {
 
 			http.Error(w, "Ошибка записи в ответ", http.StatusInternalServerError)
 			return
