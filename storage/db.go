@@ -20,7 +20,7 @@ func NewDBStorage(connection string) *DBStorage {
 	//Проверяем соединение.
 	err = db.Ping()
 	if err != nil {
-		log.Fatal("Ошибка при подключении к базе данных:", err)
+		log.Fatal(connection, err)
 	}
 
 	//Создаем таблицу, если ее нет.

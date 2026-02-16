@@ -68,7 +68,7 @@ func OriginalHandler(storage storage.Storage) http.HandlerFunc {
 		}
 		originalURL := storage.Get(shortURL)
 		if originalURL == "" {
-			http.Error(w, "Оригинальная ссылка не найдена", http.StatusNotFound)
+			http.Error(w, shortURL, http.StatusNotFound)
 			return
 		}
 
