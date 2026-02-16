@@ -40,7 +40,7 @@ func NewDBStorage(connection string) *DBStorage {
 func (db *DBStorage) Insert(originalURL, shortURL string) {
 	_, err := db.db.Exec("INSERT INTO urls (short_url, original_url) VALUES ($1, $2)", shortURL, originalURL)
 	if err != nil {
-		log.Fatal("Ошибка метода Post:", err)
+		log.Fatal("Ошибка метода Insert:", err)
 	}
 
 }

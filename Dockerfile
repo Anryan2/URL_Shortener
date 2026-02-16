@@ -10,7 +10,7 @@ COPY . .
 
 EXPOSE 8080
 
-RUN go build main.go 
+RUN go build cmd/main.go 
 
 ENV STORAGE_TYPE=memory
 ENV DB_CONN_STR="postgres://postgres:12345@localhost/postgres?sslmode=disable"
