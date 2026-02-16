@@ -11,6 +11,7 @@ import (
 	"github.com/Anryan2/URL_Shortener/storage"
 )
 
+// Структуры для входного json и для ответа
 type shortenRequest struct {
 	URL string `json:"url"`
 }
@@ -18,6 +19,7 @@ type shortenResponse struct {
 	ShortURL string `json:"short_url"`
 }
 
+// обрабатывает создание короткой ссылки
 func ShortenHandler(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {
@@ -55,6 +57,7 @@ func ShortenHandler(storage storage.Storage) http.HandlerFunc {
 	}
 }
 
+// Обрабатывает возврат полной ссылки по короткой
 func OriginalHandler(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -72,6 +75,8 @@ func OriginalHandler(storage storage.Storage) http.HandlerFunc {
 		http.Redirect(w, r, originalURL, http.StatusFound)
 	}
 }
+
+// генерирует хэш из 10 символов
 func GenerateHash(full string) string {
 	sum := sha256.Sum224([]byte(full))
 	encoded := base64.URLEncoding.EncodeToString(sum[:])

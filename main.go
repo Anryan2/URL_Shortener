@@ -16,6 +16,7 @@ import (
 var store storage.Storage
 
 func main() {
+	//Читаем значения из переменных окружения
 	defaultStorage := os.Getenv("STORAGE_TYPE")
 	defaultDbConn := os.Getenv("DB_CONN_STR")
 
@@ -23,6 +24,7 @@ func main() {
 	dbConnStr := flag.String("db", defaultDbConn, "Строка подключения к PostgreSQL")
 	flag.Parse()
 
+	//Выбираем хранилище ссылок
 	switch *storageType {
 	case "postgres":
 		fmt.Println("Используем хранилище:", *storageType)
@@ -34,11 +36,13 @@ func main() {
 		log.Fatal("Неизвестный тип хранилища")
 	}
 
+	//Создаем маршрутизатор
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/shorten", service.ShortenHandler(store))
 	mux.HandleFunc("/", service.OriginalHandler(store))
 
+	//Запускаем сервер
 	fmt.Println("Сервер запущен на порту 8080")
 	log.Fatal(http.ListenAndServe(":8080", mux))
 

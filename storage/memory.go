@@ -2,17 +2,20 @@ package storage
 
 import "sync"
 
+//Storage - интерфейс, определяющий методы для работы с хранением URL.
 type Storage interface {
-	Post(originalURL, shortURL string)
-	Get(shortURL string) string
-	checkExists(originalURL string) bool
+	Post(originalURL, shortURL string) //Сохраняет ссылку в памяти
+	Get(shortURL string) string        //Вохвращает полную ссылку
+	checkExists(shortURL string) bool  //проверяет наличие ссылки в хранилище URL
 }
 
+//MemoryStorage - структура для хранения ссылок в памяти, наследующая интерфейс Storage.
 type MemoryStorage struct {
-	URLs map[string]string
+	URLs map[string]string //URL[сокращенная ссылка] - полная ссылка
 	mu   sync.RWMutex
 }
 
+//NewMemoryStorage создает новое хранилище в памяти
 func NewMemoryStorage() *MemoryStorage {
 	return &MemoryStorage{
 		URLs: make(map[string]string),

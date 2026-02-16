@@ -5,21 +5,25 @@ import (
 	"log"
 )
 
+// DBStorage - структура для хранения ссылок в базе данных, наследующая интерфейс Storage.
 type DBStorage struct {
 	db *sql.DB
 }
 
+// Функция NewDBStorage создает новое подключение к PostgreSQL.
 func NewDBStorage(connection string) *DBStorage {
 	db, err := sql.Open("postgres", connection)
 	if err != nil {
 		log.Fatal("Ошибка при открытии базы данных:", err)
 	}
 
+	//Проверяем соединение.
 	err = db.Ping()
 	if err != nil {
 		log.Fatal("Ошибка при подключении к базе данных:", err)
 	}
 
+	//Создаем таблицу, если ее нет.
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS urls (
 			id INTEGER PRIMARY KEY,
