@@ -66,8 +66,4 @@ curl.exe -X GET "localhost:8080/ZFsTPc0LDK"
 youtu.be.
 ```
 
-### Запуск unit-тестов
-Запустить можно вручную в терминале:
-```
-go test -v ./tests/
-```
+
