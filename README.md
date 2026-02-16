@@ -15,3 +15,16 @@
 Реализованный функционал покрыт Unit-тестами.
 
 ### Запуск проекта
+Требования:
+
+Установлен *Docker* и (при использовании базы данных) *PostgreSQL*.
+
+>docker build -t url .
+
+#### Запуск сервера с хранилищем в памяти
+
+>docker run -d -p 8080:8080 -e STORAGE_TYPE=memory url
+
+#### Запуск сервера с PostgreSQL (замените строку подключения)
+
+>docker run -d -p 8080:8080 -p 5432:5432 -e STORAGE_TYPE=postgres -e DB_CONN_STR=postgres://postgres:12345@host.docker.internal/postgres?sslmode=disable url
