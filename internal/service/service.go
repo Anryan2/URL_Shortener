@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Anryan2/URL_Shortener/storage"
+	"github.com/Anryan2/URL_Shortener/internal/storage"
 )
 
 // Структуры для входного json и для ответа
@@ -39,7 +39,7 @@ func ShortenHandler(storage storage.Storage) http.HandlerFunc {
 		}
 
 		shortURL := GenerateHash(request.URL)
-		storage.Post(request.URL, shortURL)
+		storage.Insert(request.URL, shortURL)
 		response := shortenResponse{ShortURL: "http://localhost:8080/" + shortURL}
 		responseData, err := json.Marshal(response)
 		if err != nil {

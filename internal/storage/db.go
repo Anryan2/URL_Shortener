@@ -37,7 +37,7 @@ func NewDBStorage(connection string) *DBStorage {
 	return &DBStorage{db: db}
 }
 
-func (db *DBStorage) Post(originalURL, shortURL string) {
+func (db *DBStorage) Insert(originalURL, shortURL string) {
 	if db.checkExists(shortURL) {
 		_, err := db.db.Exec("INSERT INTO urls (short_url, original_url) VALUES ($1, $2)", shortURL, originalURL)
 		if err != nil {

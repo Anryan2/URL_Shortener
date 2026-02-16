@@ -1,12 +1,12 @@
-package tests
+package service_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Anryan2/URL_Shortener/service"
-	"github.com/Anryan2/URL_Shortener/storage"
+	"github.com/Anryan2/URL_Shortener/internal/service"
+	"github.com/Anryan2/URL_Shortener/internal/storage"
 )
 
 func TestOriginalHandler(t *testing.T) {
@@ -14,7 +14,7 @@ func TestOriginalHandler(t *testing.T) {
 	originalURL := "https://example.com"
 	shortURl := service.GenerateHash(originalURL)
 
-	store.Post(originalURL, shortURl)
+	store.Insert(originalURL, shortURl)
 
 	req := httptest.NewRequest("GET", "/"+shortURl, nil)
 	rec := httptest.NewRecorder()

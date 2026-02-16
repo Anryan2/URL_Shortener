@@ -1,10 +1,10 @@
-package tests
+package storage_test
 
 import (
 	"testing"
 
-	"github.com/Anryan2/URL_Shortener/service"
-	"github.com/Anryan2/URL_Shortener/storage"
+	"github.com/Anryan2/URL_Shortener/internal/service"
+	"github.com/Anryan2/URL_Shortener/internal/storage"
 )
 
 func TestMemory(t *testing.T) {
@@ -13,7 +13,7 @@ func TestMemory(t *testing.T) {
 	originalURL := "https://example.com"
 	shortURL := service.GenerateHash(originalURL)
 
-	store.Post(originalURL, shortURL)
+	store.Insert(originalURL, shortURL)
 
 	result := store.Get(shortURL)
 

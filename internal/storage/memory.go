@@ -2,13 +2,6 @@ package storage
 
 import "sync"
 
-//Storage - интерфейс, определяющий методы для работы с хранением URL.
-type Storage interface {
-	Post(originalURL, shortURL string) //Сохраняет ссылку в памяти
-	Get(shortURL string) string        //Вохвращает полную ссылку
-	checkExists(shortURL string) bool  //проверяет наличие ссылки в хранилище URL
-}
-
 //MemoryStorage - структура для хранения ссылок в памяти, наследующая интерфейс Storage.
 type MemoryStorage struct {
 	URLs map[string]string //URL[сокращенная ссылка] - полная ссылка
@@ -22,7 +15,7 @@ func NewMemoryStorage() *MemoryStorage {
 	}
 }
 
-func (m *MemoryStorage) Post(originalURL, shortURL string) {
+func (m *MemoryStorage) Insert(originalURL, shortURL string) {
 	if !m.checkExists(shortURL) {
 		m.mu.Lock()
 		defer m.mu.Unlock()

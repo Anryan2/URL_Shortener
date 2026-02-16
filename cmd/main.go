@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Anryan2/URL_Shortener/service"
-	"github.com/Anryan2/URL_Shortener/storage"
+	"github.com/Anryan2/URL_Shortener/internal/service"
+	"github.com/Anryan2/URL_Shortener/internal/storage"
 
 	_ "github.com/lib/pq"
 )

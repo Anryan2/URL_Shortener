@@ -1,4 +1,4 @@
-package tests
+package service_test
 
 import (
 	"bytes"
@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Anryan2/URL_Shortener/service"
-	"github.com/Anryan2/URL_Shortener/storage"
+	"github.com/Anryan2/URL_Shortener/internal/service"
+	"github.com/Anryan2/URL_Shortener/internal/storage"
 )
 
 func TestShortenHandler(t *testing.T) {

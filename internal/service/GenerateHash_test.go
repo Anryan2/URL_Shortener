@@ -1,9 +1,8 @@
-package tests
+package service_test
 
 import (
 	"testing"
-
-	"github.com/Anryan2/URL_Shortener/service"
+	"github.com/Anryan2/URL_Shortener/internal/service"
 )
 
 func TestGenerateHash(t *testing.T) {
