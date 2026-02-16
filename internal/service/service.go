@@ -39,6 +39,9 @@ func ShortenHandler(storage storage.Storage) http.HandlerFunc {
 		}
 
 		shortURL := GenerateHash(request.URL)
+		for !storage.CheckExists(shortURL, request.URL) {
+			shortURL = GenerateHash(shortURL)
+		}
 		storage.Insert(request.URL, shortURL)
 		response := shortenResponse{ShortURL: "http://localhost:8080/" + shortURL}
 		responseData, err := json.Marshal(response)
@@ -52,7 +55,6 @@ func ShortenHandler(storage storage.Storage) http.HandlerFunc {
 			http.Error(w, "Ошибка записи в ответ", http.StatusInternalServerError)
 			return
 		}
-		return
 
 	}
 }

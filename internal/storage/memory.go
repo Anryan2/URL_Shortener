@@ -16,26 +16,21 @@ func NewMemoryStorage() *MemoryStorage {
 }
 
 func (m *MemoryStorage) Insert(originalURL, shortURL string) {
-	if !m.checkExists(shortURL) {
-		m.mu.Lock()
-		defer m.mu.Unlock()
-		m.URLs[shortURL] = originalURL
-	}
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.URLs[shortURL] = originalURL
 
 }
 
 func (m *MemoryStorage) Get(shortURL string) string {
-	if !m.checkExists(shortURL) {
-		return ""
-	}
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	return m.URLs[shortURL]
 }
 
-func (m *MemoryStorage) checkExists(shortURL string) bool {
+func (m *MemoryStorage) CheckExists(shortURL, originalURL string) bool {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	_, exist := m.URLs[shortURL]
-	return exist
+	value, exist := m.URLs[shortURL]
+	return !exist || value == originalURL
 }

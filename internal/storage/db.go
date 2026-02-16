@@ -38,19 +38,14 @@ func NewDBStorage(connection string) *DBStorage {
 }
 
 func (db *DBStorage) Insert(originalURL, shortURL string) {
-	if db.checkExists(shortURL) {
-		_, err := db.db.Exec("INSERT INTO urls (short_url, original_url) VALUES ($1, $2)", shortURL, originalURL)
-		if err != nil {
-			log.Fatal("Ошибка метода Post:", err)
-		}
+	_, err := db.db.Exec("INSERT INTO urls (short_url, original_url) VALUES ($1, $2)", shortURL, originalURL)
+	if err != nil {
+		log.Fatal("Ошибка метода Post:", err)
 	}
 
 }
 
 func (db *DBStorage) Get(shortURL string) string {
-	if db.checkExists(shortURL) {
-		return ""
-	}
 	var originalURL string
 	err := db.db.QueryRow("SELECT original_url FROM urls WHERE short_url = $1", shortURL).Scan(&originalURL)
 	if err != nil {
@@ -59,11 +54,11 @@ func (db *DBStorage) Get(shortURL string) string {
 	return originalURL
 }
 
-func (db *DBStorage) checkExists(shortURL string) bool {
-	var originalURL string
-	err := db.db.QueryRow("SELECT original_url FROM urls WHERE short_url = $1", shortURL).Scan(&originalURL)
+func (db *DBStorage) CheckExists(shortURL, originalURL string) bool {
+	var newURL string
+	err := db.db.QueryRow("SELECT original_url FROM urls WHERE short_url = $1", shortURL).Scan(&newURL)
 	if err != nil && err != sql.ErrNoRows {
 		log.Fatal("Ошибка метода CheckExists:", err)
 	}
-	return err == sql.ErrNoRows
+	return err == sql.ErrNoRows || newURL == originalURL
 }
